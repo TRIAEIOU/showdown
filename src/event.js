@@ -15,11 +15,12 @@ showdown.Event = class {
    * @param {{}} params.attributes
    * @param {{}} params.globals
    * @param {{}} params.options
+   * @param {{}} params.node - only valid for makeMarkdown
    * @param {showdown.Converter} params.converter
    */
   constructor (name, input, params) {
     params = params || {};
-    let {output, regexp, matches, attributes, globals, options, converter} = params;
+    let {output, regexp, matches, attributes, globals, options, node, converter} = params;
     if (!showdown.helper.isString(name)) {
       if (!showdown.helper.isString(name)) {
         throw new TypeError('Event.name must be a string but ' + typeof name + ' given');
@@ -33,6 +34,7 @@ showdown.Event = class {
     this.attributes = attributes || {};
     this._globals = globals || {};
     this._options = showdown.helper.cloneObject(options, true) || {};
+    this.node = node;
     this._converter = converter || undefined;
   }
 
@@ -198,6 +200,11 @@ showdown.Event = class {
 
   _setOptions (value) {
     this._options = value;
+    return this;
+  }
+
+  _setNode (value) {
+    this.node = value;
     return this;
   }
 

@@ -156,6 +156,15 @@ showdown.subParser('makeMarkdown.table',
       txt += '| ' + tableArray[i].join(' | ') + ' |\n';
     }
 
-    return txt.trim();
+    txt = txt.trim();
+    const afterEvent = globals.converter.dispatch(new showdown.Event('makeMarkdown.table.onEnd', txt)
+      .setOutput(txt)
+      ._setGlobals(globals)
+      ._setNode(node));
+    if (afterEvent.output !== null) {
+      txt = afterEvent.output;
+    }
+
+    return txt;
   }
 );

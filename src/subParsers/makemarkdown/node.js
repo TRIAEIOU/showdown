@@ -116,13 +116,39 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
     case 'input':
       txt = showdown.subParser('makeMarkdown.input')(node, globals);
       break;
+    
+    case 'u':
+      txt = showdown.subParser('makeMarkdown.underline')(node, globals);
+      break;
 
     default:
-      txt = node.outerHTML + '\n\n';
+      console.log('1→' + txt + '←')
+      const unhandledEvent = globals.converter.dispatch(new showdown.Event('makeMarkdown.node.unhandled', txt)
+        .setOutput(txt)
+        ._setGlobals(globals)
+        ._setNode(node));
+      console.log('2→' + txt + '←')
+      if (unhandledEvent.output !== null) {
+        txt = unhandledEvent.output;
+        console.log('3→' + txt + '←')
+      } else {
+        txt = node.outerHTML + '\n\n';
+        console.log('4→' + txt + '←')
+      }
+  }
+
+  // Handle preceding inline HTML elements and unwrapped text
+  const blockTags = ['h1',  'h2',  'h3',  'h4',  'h5',  'h6',  'p',  'blockquote',  'hr',  'ol',  'ul',  'precode',  'pre',  'table'];
+  const prevTagName = node?.previousSibling?.nodeName?.toLowerCase() || 'h1';
+  console.log('>>> ' + prevTagName + ' ⇒ ' + tagName);
+  console.log('5→' + txt + '←')
+  if (!blockTags.includes(prevTagName) && blockTags.includes(tagName)) {
+    txt = '\n\n' + txt;
   }
 
   // common normalization
   // TODO eventually
-
+  console.log('6→' + txt + '←')
   return txt;
 });
+

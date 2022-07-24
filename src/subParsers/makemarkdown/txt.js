@@ -1,4 +1,4 @@
-showdown.subParser('makeMarkdown.txt', function (node) {
+showdown.subParser('makeMarkdown.txt', function (node, globals, spansOnly) {
   'use strict';
 
   var txt = node.nodeValue;
@@ -38,6 +38,14 @@ showdown.subParser('makeMarkdown.txt', function (node) {
 
   // reference URIs must also be escaped
   txt = txt.replace(/^ {0,3}\[([\S \t]*?)]:/gm, '\\[$1]:');
+
+  const afterEvent = globals.converter.dispatch(new showdown.Event('makeMarkdown.txt.onEnd', txt)
+    .setOutput(txt)
+    ._setGlobals(globals)
+    ._setNode(node));
+  if (afterEvent.output !== null) {
+    txt = afterEvent.output;
+  }
 
   return txt;
 });

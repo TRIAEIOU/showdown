@@ -71,7 +71,7 @@ module.exports = function (grunt) {
       cli: {
         options: {
           sourceMap: false,
-          banner: '#!/usr/bin/env node'
+          // banner: '#!/usr/bin/env node' //this keeps doubling the #! in bin/showdown.js
         },
         files: {
           'bin/showdown.js': ['<%= concat.cli.dest %>']

@@ -368,7 +368,8 @@ showdown.Converter = function (converterOptions) {
     doc.innerHTML = src;
 
     var globals = {
-      preList: substitutePreCodeTags(doc)
+      preList: substitutePreCodeTags(doc),
+      converter: this
     };
 
     // remove all newlines and collapse spaces
